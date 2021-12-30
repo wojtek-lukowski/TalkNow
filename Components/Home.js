@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TextInput, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, Button, TextInput, ImageBackground, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const image = require('../Images/bcg-img.png');
@@ -20,6 +20,14 @@ export default class Home extends React.Component {
   //   this.props.navigation.navigate('Chat');
   // }
 
+  setUser(username) {
+    if (!username) {
+      return Alert.alert('Please enter your name')
+    } else {
+      this.setState({ username })
+    }
+  }
+
   render() {
     console.log(this.state);
 
@@ -32,7 +40,8 @@ export default class Home extends React.Component {
             <TextInput
             style={styles.input}
             placeholder="Enter your name"
-            onChangeText={ (username) => this.setState({ username: username }) }
+            // onChangeText={ (username) => this.setState({ username }) }
+            onChangeText={ (username) => this.setUser(username) }
             defaultValue={this.state.username}
             ></TextInput>
             <View style={ styles.colorSelection }>
@@ -44,7 +53,7 @@ export default class Home extends React.Component {
                 <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[3]}]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity> */}
                 {backgroundColor.map(color =>
                 <TouchableOpacity key={color.id}
-                style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color: color })}>
+                style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color })}>
                 </TouchableOpacity>
                 )}
               </View>
@@ -56,7 +65,7 @@ export default class Home extends React.Component {
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
             ></Button> */}
             <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, {backgroundColor: this.state.color,}]}
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}>
               <Text style={styles.buttonText}>ENTER THE CHAT</Text>
             </TouchableOpacity>
