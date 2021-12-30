@@ -38,10 +38,15 @@ export default class Home extends React.Component {
             <View style={ styles.colorSelection }>
               <Text style={styles.colorText}>Choose Background Color:</Text>
               <View style={styles.colorButtons}>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: backgroundColor[0] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: backgroundColor[1] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: backgroundColor[2] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity>
+                {/* <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[0]}]} onPress={() => this.setState({ color: backgroundColor[0] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[1]}]} onPress={() => this.setState({ color: backgroundColor[1] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[2]}]} onPress={() => this.setState({ color: backgroundColor[2] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[3]}]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity> */}
+                {backgroundColor.map(color =>
+                <TouchableOpacity key={color.id}
+                style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color: color })}>
+                </TouchableOpacity>
+                )}
               </View>
             </View>
             {/* <Button title="Enter the chat"
@@ -50,12 +55,9 @@ export default class Home extends React.Component {
             // onPress={ (username) => this.setState({ username: username }) }
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
             ></Button> */}
-            <TouchableOpacity title="Enter the chat"
+            <TouchableOpacity
             style={styles.button}
-            // onPress={ this.onPress }
-            // onPress={ (username) => this.setState({ username: username }) }
-            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
-            >
+            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}>
               <Text style={styles.buttonText}>ENTER THE CHAT</Text>
             </TouchableOpacity>
         </View>
