@@ -4,17 +4,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const image = require('../Images/bcg-img.png');
 
-const backgroundColor1 = '#090C08';
-const backgroundColor2 = '#474056';
-const backgroundColor3 = '#8A95A5';
-const backgroundColor4 = '#B9C6AE';
+const backgroundColor = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
 export default class Home extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       username: '',
-      color: backgroundColor1
+      color: backgroundColor[0]
     };
   }
 
@@ -41,10 +38,10 @@ export default class Home extends React.Component {
             <View style={ styles.colorSelection }>
               <Text style={styles.colorText}>Choose Background Color:</Text>
               <View style={styles.colorButtons}>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: backgroundColor1 })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: backgroundColor2 })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: backgroundColor3 })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: backgroundColor4 })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: backgroundColor[0] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: backgroundColor[1] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: backgroundColor[2] })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity>
               </View>
             </View>
             <Button title="Enter the chat"
@@ -126,16 +123,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   buttonColor1: {
-    backgroundColor: backgroundColor1
+    backgroundColor: backgroundColor[0]
   },
   buttonColor2: {
-    backgroundColor: backgroundColor2
+    backgroundColor: backgroundColor[1]
   },
   buttonColor3: {
-    backgroundColor: backgroundColor3
+    backgroundColor: backgroundColor[2]
   },
   buttonColor4: {
-    backgroundColor: backgroundColor4
+    backgroundColor: backgroundColor[3]
   },
   colorText: {
     fontSize: 16,
