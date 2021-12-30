@@ -20,7 +20,8 @@ export default class Home extends React.Component {
   return (
     <View style={styles.home}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      <Text style={styles.text}>TalkNow</Text>
+      <Text style={styles.welcome}>TalkNow</Text>
+      <View style={styles.box}>
       <TextInput
       style={styles.input}
       placeholder="Enter your name"
@@ -28,10 +29,12 @@ export default class Home extends React.Component {
       defaultValue={this.state.username}
       ></TextInput>
       <Button title="Enter the chat"
+      style={styles.button}
       // onPress={ this.onPress }
       // onPress={ (username) => this.setState({ username: username }) }
       onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username })}
       ></Button>
+      </View>
       </ImageBackground>
     </View>
   )}
@@ -43,19 +46,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 20,
-    color: '#40D4C7',
+  welcome: {
+    flex: .85,
+    fontSize: 45,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
   },
   input: {
     height: 40,
-    backgroundColor: '#40D4C7',
+    width: '88%',
+    backgroundColor: '#fff',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#757083',
     color: '#000',
-    fontSize: 25
+    fontSize: 25,
+    padding: 10
   },
   image: {
     flex: 1,
     justifyContent: 'center',
     width: '100%'
+  },
+  box: {
+    height: '44%',
+    width: '88%',
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+    alignItems: 'center',
+    paddingTop: 24
+  },
+  button: {
+    height: 40,
+    backgroundColor: '#757083',
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
   }
 });
