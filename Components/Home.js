@@ -22,12 +22,12 @@ export default class Home extends React.Component {
       style={styles.input}
       placeholder="Enter your name"
       // onChangeText={ (username) => this.setState({ username: username }) }
-      value={this.state.username}
+      defaultValue={this.state.username}
       ></TextInput>
       <Button title="Enter the chat"
       // onPress={ this.onPress }
       onPress={ (username) => this.setState({ username: username }) }
-      // onPress={() => this.props.navigation.navigate('Chat')}
+      onPress={() => this.props.navigation.navigate('Chat')}
       ></Button>
     </View>
   )
