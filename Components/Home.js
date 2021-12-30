@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, TextInput, ImageBackground } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const image = require('../Images/bcg-img.png');
 export default class Home extends React.Component {
@@ -35,10 +36,12 @@ export default class Home extends React.Component {
             <View style={ styles.colorSelection }>
               <Text style={styles.colorText}>Choose Background Color:</Text>
               <View style={styles.colorButtons}>
-                <View style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: '#090C08' })}></View>
-                <View style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: '#474056' })}></View>
-                <View style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: '#8A95A5' })}></View>
-                <View style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: '#B9C6AE' })}></View>
+                <TouchableOpacity style={styles.buttonColor} onPress={() => this.setState({ color: '#090C08' })}></TouchableOpacity>
+                {/* <View style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: '#090C08' })}></View> */}
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: '#474056' })}></TouchableOpacity>
+                {/* <View style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: '#474056' })}></View> */}
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: '#8A95A5' })}></TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: '#B9C6AE' })}></TouchableOpacity>
               </View>
             </View>
             <Button title="Enter the chat"
