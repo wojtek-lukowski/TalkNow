@@ -44,12 +44,20 @@ export default class Home extends React.Component {
                 <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity>
               </View>
             </View>
-            <Button title="Enter the chat"
+            {/* <Button title="Enter the chat"
             style={styles.button}
             // onPress={ this.onPress }
             // onPress={ (username) => this.setState({ username: username }) }
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
-            ></Button>
+            ></Button> */}
+            <TouchableOpacity title="Enter the chat"
+            style={styles.button}
+            // onPress={ this.onPress }
+            // onPress={ (username) => this.setState({ username: username }) }
+            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
+            >
+              <Text style={styles.buttonText}>ENTER THE CHAT</Text>
+            </TouchableOpacity>
         </View>
         </View>
       </ImageBackground>
@@ -100,16 +108,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   button: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
     width: '100%',
-    backgroundColor: '#757083',
+    backgroundColor: backgroundColor[1],
+  },
+  buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
-  // colorSelection: { //text + color buttons
-  //   backgroundColor: 'red',
-  // },
   colorButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
