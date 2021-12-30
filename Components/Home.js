@@ -20,7 +20,7 @@ export default class Home extends React.Component {
   return (
     <View style={styles.home}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      <Text style={styles.text}>Welcome, enter your name to start</Text>
+      <Text style={styles.text}>TalkNow</Text>
       <TextInput
       style={styles.input}
       placeholder="Enter your name"
