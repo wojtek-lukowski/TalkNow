@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
 export default class Chat extends React.Component {
 
   render() {
+    let username = this.props.route.params.username;
+    this.props.navigation.setOptions({ title: username });
+    
   return (
     <View style={styles.chat}>
       <Text>Hello World, this is the chat page</Text>
