@@ -36,10 +36,8 @@ export default class Home extends React.Component {
             <View style={ styles.colorSelection }>
               <Text style={styles.colorText}>Choose Background Color:</Text>
               <View style={styles.colorButtons}>
-                <TouchableOpacity style={styles.buttonColor} onPress={() => this.setState({ color: '#090C08' })}></TouchableOpacity>
-                {/* <View style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: '#090C08' })}></View> */}
+                <TouchableOpacity style={[styles.buttonColor, styles.buttonColor1]} onPress={() => this.setState({ color: '#090C08' })}></TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: '#474056' })}></TouchableOpacity>
-                {/* <View style={[styles.buttonColor, styles.buttonColor2]} onPress={() => this.setState({ color: '#474056' })}></View> */}
                 <TouchableOpacity style={[styles.buttonColor, styles.buttonColor3]} onPress={() => this.setState({ color: '#8A95A5' })}></TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonColor, styles.buttonColor4]} onPress={() => this.setState({ color: '#B9C6AE' })}></TouchableOpacity>
               </View>
@@ -48,7 +46,7 @@ export default class Home extends React.Component {
             style={styles.button}
             // onPress={ this.onPress }
             // onPress={ (username) => this.setState({ username: username }) }
-            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username } )}
+            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
             ></Button>
         </View>
         </View>
@@ -120,7 +118,6 @@ const styles = StyleSheet.create({
   buttonColor: {
     width: 48,
     height: 48,
-    backgroundColor: 'black',
     borderRadius: 50,
   },
   buttonColor1: {
