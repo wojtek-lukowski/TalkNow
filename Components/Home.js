@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignSelf: 'center',
     alignItems: 'center',
-    paddingTop: 24
+    justifyContent: 'space-evenly',
   },
   button: {
     height: 40,
