@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, backgroundColor, Alert } from 'react-native';
-import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import { StyleSheet, View, backgroundColor } from 'react-native';
+import { Bubble, GiftedChat, SystemMessage } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 
 const image = require('../Images/profile.jpg');
-
 export default class Chat extends React.Component {
   constructor() {
     super();
@@ -12,13 +11,13 @@ export default class Chat extends React.Component {
       messages: [],
     }
   }
-
+  
   componentDidMount() {
     this.setState({
       messages: [
         {
           _id: 1,
-          text: 'Hello developer',
+          text: `Hello ${this.props.route.params.username}`,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -28,13 +27,14 @@ export default class Chat extends React.Component {
         },
         {
           _id: 2,
-          text: 'This is a system message',
+          text: `${this.props.route.params.username} joined the chat`,
           createdAt: new Date(),
           system: true
         }
       ],
     })
   }
+
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
@@ -47,16 +47,23 @@ export default class Chat extends React.Component {
       {...props}
       wrapperStyle={{
         right: {
-          backgroundColor: '#000'
+          backgroundColor: this.props.route.params.color
         }
       }}
       />
     )
-    }
+  }
+
+  renderSystemMessage(props) {
+		return <SystemMessage {...props} textStyle={{ color: this.props.route.params.color }} />;
+	}
+
   
   render() {
     let username = this.props.route.params.username;
-    // let color = this.props.route.params.color;
+    let color = this.props.route.params.color;
+    let image = require('../Images/profile.jpg');
+
     this.props.navigation.setOptions({ title: username });
     
   return (
@@ -64,7 +71,8 @@ export default class Chat extends React.Component {
     <GiftedChat
     messages={this.state.messages}
     onSend={messages => this.onSend(messages)}
-    renderBubble={this.renderBubble}
+    renderBubble={this.renderBubble.bind(this)}
+    renderSystemMessage={this.renderSystemMessage.bind(this)}
     user={{
       _id: 1,
       name: {username},

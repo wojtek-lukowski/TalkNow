@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const image = require('../Images/bcg-img.png');
 
-const backgroundColor = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
+const backgroundColor = ['#090C08', '#474056', '#8A95A5', '#7F8778'];
 export default class Home extends React.Component {
 
   constructor(props) {
@@ -45,7 +45,7 @@ export default class Home extends React.Component {
             defaultValue={this.state.username}
             ></TextInput>
             <View style={ styles.colorSelection }>
-              <Text style={styles.colorText}>Choose Background Color:</Text>
+              <Text style={styles.colorText}>Choose Your Color:</Text>
               <View style={styles.colorButtons}>
                 {/* <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[0]}]} onPress={() => this.setState({ color: backgroundColor[0] })}></TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[1]}]} onPress={() => this.setState({ color: backgroundColor[1] })}></TouchableOpacity>
