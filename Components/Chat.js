@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, backgroundColor, Alert } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 
 const image = require('../Images/profile.jpg');
@@ -40,6 +40,19 @@ export default class Chat extends React.Component {
       messages: GiftedChat.append(previousState.messages, messages),
     }))
   }
+
+  renderBubble(props) {
+    return (
+      <Bubble
+      {...props}
+      wrapperStyle={{
+        right: {
+          backgroundColor: '#000'
+        }
+      }}
+      />
+    )
+    }
   
   render() {
     let username = this.props.route.params.username;
@@ -51,6 +64,7 @@ export default class Chat extends React.Component {
     <GiftedChat
     messages={this.state.messages}
     onSend={messages => this.onSend(messages)}
+    renderBubble={this.renderBubble}
     user={{
       _id: 1,
       name: {username},
