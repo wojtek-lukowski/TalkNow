@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, backgroundColor } from 'react-native';
+import { StyleSheet, View, Button, backgroundColor } from 'react-native';
 import { Bubble, GiftedChat, SystemMessage } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 
@@ -73,9 +73,9 @@ export default class Chat extends React.Component {
     querySnapshot.forEach((message) => {
       var data = message.data();
       messages.push({
-        id: data.id,
+        _id: data._id,
         text: data.text,
-        createdAt: data.createdAt,
+        createdAt: data.createdAt.toDate(),
         user: data.user
       });
     });
@@ -84,10 +84,28 @@ export default class Chat extends React.Component {
     })
   }
 
+  addMessage() {
+    this.referenceChat.add({
+      _id: data._id,
+      text: data.text,
+      createdAt: data.createdAt.toDate(),
+      user: data.user
+    });
+  }
+
+  addTestMessage() {
+    this.referenceChat.add({
+      _id: '002',
+      text: 'This is the test message added from the code',
+      createdAt: new Date(),
+      user: 'test_user'
+    });
+  }
+
   onSend(messages = []) {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }))
+      messages: GiftedChat.append(previousState.messages, messages)
+    }));
   }
 
   renderBubble(props) {
@@ -107,10 +125,9 @@ export default class Chat extends React.Component {
 		return <SystemMessage {...props} textStyle={{ color: this.props.route.params.color }} />;
 	}
 
-  
   render() {
     let username = this.props.route.params.username;
-    let color = this.props.route.params.color;
+    // let color = this.props.route.params.color;
     let image = require('../Images/profile.jpg');
 
     this.props.navigation.setOptions({ title: username });
@@ -128,6 +145,7 @@ export default class Chat extends React.Component {
       avatar: image
     }}
     />
+    <Button title='add test message' onPress={() => this.addTestMessage() }></Button>
     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
     }
     </View>
