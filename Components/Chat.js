@@ -3,6 +3,9 @@ import { StyleSheet, View, backgroundColor } from 'react-native';
 import { Bubble, GiftedChat, SystemMessage } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 
+const firebase = require('firebase');
+require('firebase/firestore');
+
 const image = require('../Images/profile.jpg');
 export default class Chat extends React.Component {
   constructor() {
