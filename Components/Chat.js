@@ -10,31 +10,77 @@ const image = require('../Images/profile.jpg');
 export default class Chat extends React.Component {
   constructor() {
     super();
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyApvLhq2F-kVtPjBTIXAQlJLqI3GRHyMl4",
+      authDomain: "talknow-8f240.firebaseapp.com",
+      projectId: "talknow-8f240",
+      storageBucket: "talknow-8f240.appspot.com",
+      messagingSenderId: "1088866743334",
+      appId: "1:1088866743334:web:73827e3460a6f002fae2e7"
+    };
+
+    if (!firebase.apps.length){
+      firebase.initializeApp(firebaseConfig);
+      }
+
+    this.referenceChat = firebase.firestore().collection('messages');
+
     this.state = {
       messages: [],
     }
   }
   
+  // componentDidMount() {
+  //   this.setState({
+  //     messages: [
+  //       {
+  //         _id: 1,
+  //         text: `Hello ${this.props.route.params.username}`,
+  //         createdAt: new Date(),
+  //         user: {
+  //           _id: 2,
+  //           name: 'React Native',
+  //           avatar: 'https://placeimg.com/140/140/any',
+  //         },
+  //       },
+  //       {
+  //         _id: 2,
+  //         text: `${this.props.route.params.username} joined the chat`,
+  //         createdAt: new Date(),
+  //         system: true
+  //       }
+  //     ],
+  //   })
+  // }
+
   componentDidMount() {
+    this.referenceChat = firebase.firestore().collection('messages');
+    this.unsubscribe = this.referenceChat.onSnapshot(this.onCollectionUpdate);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [{
+      _id: 2,
+        text: `${this.props.route.params.username} joined the chat`,
+        createdAt: new Date(),
+        system: true
+    }];
+    querySnapshot.forEach((message) => {
+      var data = message.data();
+      messages.push({
+        id: data.id,
+        text: data.text,
+        createdAt: data.createdAt,
+        user: data.user
+      });
+    });
     this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: `Hello ${this.props.route.params.username}`,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-        {
-          _id: 2,
-          text: `${this.props.route.params.username} joined the chat`,
-          createdAt: new Date(),
-          system: true
-        }
-      ],
+      messages
     })
   }
 
