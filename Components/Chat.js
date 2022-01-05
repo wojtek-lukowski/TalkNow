@@ -30,29 +30,6 @@ export default class Chat extends React.Component {
       messages: [],
     }
   }
-  
-  // componentDidMount() {
-  //   this.setState({
-  //     messages: [
-  //       {
-  //         _id: 1,
-  //         text: `Hello ${this.props.route.params.username}`,
-  //         createdAt: new Date(),
-  //         user: {
-  //           _id: 2,
-  //           name: 'React Native',
-  //           avatar: 'https://placeimg.com/140/140/any',
-  //         },
-  //       },
-  //       {
-  //         _id: 2,
-  //         text: `${this.props.route.params.username} joined the chat`,
-  //         createdAt: new Date(),
-  //         system: true
-  //       }
-  //     ],
-  //   })
-  // }
 
   componentDidMount() {
     this.referenceChat = firebase.firestore().collection('messages');
@@ -64,19 +41,25 @@ export default class Chat extends React.Component {
   }
 
   onCollectionUpdate = (querySnapshot) => {
-    const messages = [{
+    const messages = [
+      {
       _id: 2,
         text: `${this.props.route.params.username} joined the chat`,
         createdAt: new Date(),
         system: true
-    }];
+    }
+  ];
     querySnapshot.forEach((message) => {
       var data = message.data();
       messages.push({
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar
+      },
       });
     });
     this.setState({
@@ -84,28 +67,26 @@ export default class Chat extends React.Component {
     })
   }
 
-  addMessage() {
+  addMessage(newMessage) {
+    const message = newMessage[0];
     this.referenceChat.add({
-      _id: data._id,
-      text: data.text,
-      createdAt: data.createdAt.toDate(),
-      user: data.user
+      _id: message._id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: message.user
+      // _id: '002',
+      // text: "this is a message added with the addMessage function",
+      // createdAt: new Date(),
+      // user: 'test user'
     });
-  }
-
-  addTestMessage() {
-    this.referenceChat.add({
-      _id: '002',
-      text: 'This is the test message added from the code',
-      createdAt: new Date(),
-      user: 'test_user'
-    });
+    console.log(message._id, message.text, message.createdAt, message.user);
   }
 
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages)
     }));
+    this.addMessage(messages);
   }
 
   renderBubble(props) {
@@ -145,7 +126,6 @@ export default class Chat extends React.Component {
       avatar: image
     }}
     />
-    <Button title='add test message' onPress={() => this.addTestMessage() }></Button>
     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
     }
     </View>
