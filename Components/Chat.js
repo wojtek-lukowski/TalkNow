@@ -6,7 +6,7 @@ import { Platform, KeyboardAvoidingView } from 'react-native';
 const firebase = require('firebase');
 require('firebase/firestore');
 
-const image = require('../Images/profile.jpg');
+// const image = require('../Images/profile.jpg');
 export default class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -29,12 +29,12 @@ export default class Chat extends React.Component {
     this.state = {
       username: this.props.route.params.username,
       messages: [
-        {
-          _id: 2,
-            text: `${this.props.route.params.username} joined the chat`,
-            createdAt: new Date(),
-            system: true
-        }
+        // {
+        //   _id: 2,
+        //     text: `${this.props.route.params.username} joined the chat`,
+        //     createdAt: new Date(),
+        //     system: true
+        // } //not sure where to put the "joined chat" info now - in 'ComponentDidMount' it refreshed after each message, here disappears
       ],
       uid: 0,
       user: {
@@ -74,15 +74,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
   }
 
   onCollectionUpdate = (querySnapshot) => {
-    const messages = [
-    //   {
-    //   _id: 2,
-    //     // text: `${this.props.route.params.username} joined the chat`,
-    //     text: `${this.state.username} joined the chat`,
-    //     createdAt: new Date(),
-    //     system: true
-    // }
-  ];
+    const messages = [];
     querySnapshot.forEach((message) => {
       var data = message.data();
       messages.push({
@@ -93,7 +85,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
           _id: data.user._id,
           name: data.user.name,
           avatar: data.user.avatar
-      },
+        },
       });
     });
     this.setState({
@@ -109,10 +101,6 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
       createdAt: message.createdAt,
       user: message.user,
       uid: this.state.uid
-      // _id: '002',
-      // text: "this is a message added with the addMessage function",
-      // createdAt: new Date(),
-      // user: 'test user'
     });
   }
 
@@ -143,7 +131,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
   render() {
     // let username = this.props.route.params.username;
     // let color = this.props.route.params.color;
-    let image = require('../Images/profile.jpg');
+    // let image = require('../Images/profile.jpg');
 
     this.props.navigation.setOptions({ title: this.state.username });
     
