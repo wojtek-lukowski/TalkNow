@@ -146,7 +146,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
     user={{
       _id: this.state.uid,
       name: this.state.username,
-      avatar: ''
+      avatar: 'https://placeimg.com/140/140/any'
     }}
     />
     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
