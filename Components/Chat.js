@@ -66,12 +66,10 @@ this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
 
 this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
 this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
-
-    // this.referenceChat = firebase.firestore().collection('messages');
-    // this.unsubscribe = this.referenceChat.onSnapshot(this.onCollectionUpdate);
   }
 
   componentWillUnmount() {
+    this.authUnsubscribe();
     this.unsubscribe();
   }
 
@@ -116,7 +114,6 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
       // createdAt: new Date(),
       // user: 'test user'
     });
-    console.log(message._id, message.text, message.createdAt, message.user);
   }
 
   onSend(messages = []) {
@@ -161,7 +158,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
     user={{
       _id: this.state.uid,
       name: this.state.username,
-      avatar: image
+      avatar: ''
     }}
     />
     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
