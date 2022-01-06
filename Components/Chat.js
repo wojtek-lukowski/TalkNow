@@ -8,8 +8,8 @@ require('firebase/firestore');
 
 const image = require('../Images/profile.jpg');
 export default class Chat extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     const firebaseConfig = {
       apiKey: "AIzaSyApvLhq2F-kVtPjBTIXAQlJLqI3GRHyMl4",
@@ -27,13 +27,48 @@ export default class Chat extends React.Component {
     this.referenceChat = firebase.firestore().collection('messages');
 
     this.state = {
-      messages: [],
+      username: this.props.route.params.username,
+      messages: [
+        {
+          _id: 2,
+            text: `${this.props.route.params.username} joined the chat`,
+            createdAt: new Date(),
+            system: true
+        }
+      ],
+      uid: 0,
+      user: {
+        _id: '',
+        name: '',
+        avatar: ''
+      },
+      loggedInText: 'Connecting'
     }
   }
 
   componentDidMount() {
-    this.referenceChat = firebase.firestore().collection('messages');
-    this.unsubscribe = this.referenceChat.onSnapshot(this.onCollectionUpdate);
+this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) {
+    await firebase.auth().signInAnonymously();
+  }
+  this.setState({
+    uid: user.uid,
+    messages: [],
+    user: {
+      _id: user._id,
+      name: this.state.username,
+      avatar: 'https://placeimg.com/140/140/any'
+    },
+    loggedInText: 'Hello there',
+  });
+  this.unsubscribe = this.referenceChat.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+});
+
+this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
+this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
+
+    // this.referenceChat = firebase.firestore().collection('messages');
+    // this.unsubscribe = this.referenceChat.onSnapshot(this.onCollectionUpdate);
   }
 
   componentWillUnmount() {
@@ -42,12 +77,13 @@ export default class Chat extends React.Component {
 
   onCollectionUpdate = (querySnapshot) => {
     const messages = [
-      {
-      _id: 2,
-        text: `${this.props.route.params.username} joined the chat`,
-        createdAt: new Date(),
-        system: true
-    }
+    //   {
+    //   _id: 2,
+    //     // text: `${this.props.route.params.username} joined the chat`,
+    //     text: `${this.state.username} joined the chat`,
+    //     createdAt: new Date(),
+    //     system: true
+    // }
   ];
     querySnapshot.forEach((message) => {
       var data = message.data();
@@ -73,7 +109,8 @@ export default class Chat extends React.Component {
       _id: message._id,
       text: message.text,
       createdAt: message.createdAt,
-      user: message.user
+      user: message.user,
+      uid: this.state.uid
       // _id: '002',
       // text: "this is a message added with the addMessage function",
       // createdAt: new Date(),
@@ -107,31 +144,29 @@ export default class Chat extends React.Component {
 	}
 
   render() {
-    let username = this.props.route.params.username;
+    // let username = this.props.route.params.username;
     // let color = this.props.route.params.color;
     let image = require('../Images/profile.jpg');
 
-    this.props.navigation.setOptions({ title: username });
+    this.props.navigation.setOptions({ title: this.state.username });
     
   return (
     <View style={styles.chatWrapper}>
+      {/* <Text>{this.state.loggedInText}</Text> */}
     <GiftedChat
     messages={this.state.messages}
     onSend={messages => this.onSend(messages)}
     renderBubble={this.renderBubble.bind(this)}
     renderSystemMessage={this.renderSystemMessage.bind(this)}
     user={{
-      _id: 1,
-      name: {username},
+      _id: this.state.uid,
+      name: this.state.username,
       avatar: image
     }}
     />
     { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null
     }
     </View>
-    // <View style={[styles.chat, {backgroundColor: color}]}>
-    //   <Text style={styles.text}>Hello {username}, this is your chat page</Text>
-    // </View>
   )
   }
 }
