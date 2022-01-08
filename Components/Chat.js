@@ -66,6 +66,15 @@ saveMessages = async () => {
   try {
     await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     console.log('saving to storage');
+    //adding to localStorage (to test in browser)
+    await localStorage.setItem('messages', JSON.stringify(this.state.messages));
+    console.log('saving to local storage');
+    //testing localStorage content
+    let localStorageMessages = localStorage.getItem('messages');
+    console.log('local storage', JSON.parse(localStorageMessages));
+    //testing AsyncStorage content
+    let asyncStorageMessages = AsyncStorage.getItem('messages');
+    console.log('async storage', asyncStorageMessages);
   } catch (error) {
     console.log(error.message);
   }
@@ -73,10 +82,11 @@ saveMessages = async () => {
 
 deleteMessages = async () => {
   try {
-    await AsyncStorage.deleteItem('messages');
+    await AsyncStorage.removeItem('messages');
     this.setState({
       messages: []
-    })
+    });
+    console.log('deleting messages');
   } catch (error) {
     console.log(error.message)
   }
@@ -85,7 +95,8 @@ deleteMessages = async () => {
 componentDidMount() {
 
   NetInfo.fetch().then(connection => {
-    if (connection.isConnected) { //user online
+    //user online
+    if (connection.isConnected) {
       console.log('online');
       this.setState({
         isConnected: true
@@ -111,12 +122,18 @@ componentDidMount() {
       this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
       this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
 
-    } else { //user offline
+    } else {
+      //user offline
       console.log('offline');
       this.setState({
         isConnected: false
       });
     this.getMessages();
+    //testing local & async storage content offline
+    let localStorageMessagesOffline = localStorage.getItem('messages');
+    console.log('local storage offline', localStorageMessagesOffline);
+    let asyncStorageMessagesOffline = AsyncStorage.getItem('messages');
+    console.log('async storage offline', asyncStorageMessagesOffline);
     }
   });
 }
@@ -162,7 +179,7 @@ componentDidMount() {
       messages: GiftedChat.append(previousState.messages, messages)
     }));
     this.addMessage(messages);
-    this.saveMessages();
+    this.saveMessages(messages);
   }
 
   renderBubble(props) {
