@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Button, backgroundColor } from 'react-native';
 import { Bubble, GiftedChat, SystemMessage } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -46,11 +47,57 @@ export default class Chat extends React.Component {
     }
   }
 
-  componentDidMount() {
-this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-  if (!user) {
-    await firebase.auth().signInAnonymously();
+// async getMessages() {
+//   let messages = '';
+//   try {
+//     messages = (await AsyncStorage.getItem('messages'))|| [];
+//     this.setState({
+//       messages: JSON.parse(messages)
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
+
+getMessages = async () => {
+  let messages = '';
+  try {
+    messages = (await AsyncStorage.getItem('messages'))|| [];
+    this.setState({
+      messages: JSON.parse(messages)
+    });
+    console.log('getting from storage');
+  } catch (error) {
+    console.log(error.message);
   }
+};
+
+saveMessages = async () => {
+  try {
+    await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+    console.log('saving to storage');
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+deleteMessages = async () => {
+  try {
+    await AsyncStorage.deleteItem('messages');
+    this.setState({
+      messages: []
+    })
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+componentDidMount() {
+  this.getMessages();
+  this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+    if (!user) {
+      await firebase.auth().signInAnonymously();
+    }
   this.setState({
     uid: user.uid,
     messages: [],
@@ -62,11 +109,10 @@ this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
     loggedInText: 'Hello there',
   });
   this.unsubscribe = this.referenceChat.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
-});
-
-this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
-this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
-  }
+  });
+  this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
+  this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
+}
 
   componentWillUnmount() {
     this.authUnsubscribe();
@@ -109,6 +155,7 @@ this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
       messages: GiftedChat.append(previousState.messages, messages)
     }));
     this.addMessage(messages);
+    this.saveMessages();
   }
 
   renderBubble(props) {
