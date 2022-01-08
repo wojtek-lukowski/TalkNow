@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Button, backgroundColor } from 'react-native';
-import { Bubble, GiftedChat, SystemMessage } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, SystemMessage, InputToolbar } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -43,21 +44,10 @@ export default class Chat extends React.Component {
         name: '',
         avatar: ''
       },
+      isConnected: undefined,
       loggedInText: 'Connecting'
     }
   }
-
-// async getMessages() {
-//   let messages = '';
-//   try {
-//     messages = (await AsyncStorage.getItem('messages'))|| [];
-//     this.setState({
-//       messages: JSON.parse(messages)
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 getMessages = async () => {
   let messages = '';
@@ -93,6 +83,21 @@ deleteMessages = async () => {
 }
 
 componentDidMount() {
+
+  NetInfo.fetch().then(Connection => {
+    if (Connection.isConnected) {
+      console.log('online');
+      this.setState({
+        isConnected: true
+      })
+    } else {
+      console.log('offline');
+      this.setState({
+        isConnected: false
+      })
+    }
+  });
+
   this.getMessages();
   this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
     if (!user) {
@@ -175,6 +180,15 @@ componentDidMount() {
 		return <SystemMessage {...props} textStyle={{ color: this.props.route.params.color }} />;
 	}
 
+  renderInputToolbar(props) {
+    if (this.state.isConnected == false) {
+    } else {
+      return(
+        <InputToolbar {...props} />
+      );
+    }
+  }
+
   render() {
     // let username = this.props.route.params.username;
     // let color = this.props.route.params.color;
@@ -190,6 +204,7 @@ componentDidMount() {
     onSend={messages => this.onSend(messages)}
     renderBubble={this.renderBubble.bind(this)}
     renderSystemMessage={this.renderSystemMessage.bind(this)}
+    renderInputToolbar={this.renderInputToolbar.bind(this)}
     user={{
       _id: this.state.uid,
       name: this.state.username,
