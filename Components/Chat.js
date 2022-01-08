@@ -55,7 +55,7 @@ this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
     uid: user.uid,
     messages: [],
     user: {
-      _id: user._id,
+      _id: user.uid,
       name: this.state.username,
       avatar: 'https://placeimg.com/140/140/any'
     },
