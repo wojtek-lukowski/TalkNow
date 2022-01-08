@@ -84,39 +84,41 @@ deleteMessages = async () => {
 
 componentDidMount() {
 
-  NetInfo.fetch().then(Connection => {
-    if (Connection.isConnected) {
+  NetInfo.fetch().then(connection => {
+    if (connection.isConnected) { //user online
       console.log('online');
       this.setState({
         isConnected: true
-      })
-    } else {
+      });
+      this.saveMessages();
+
+      this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+        if (!user) {
+          await firebase.auth().signInAnonymously();
+        }
+      this.setState({
+        uid: user.uid,
+        messages: [],
+        user: {
+          _id: user.uid,
+          name: this.state.username,
+          avatar: 'https://placeimg.com/140/140/any'
+        },
+        loggedInText: 'Hello there',
+      });
+      this.unsubscribe = this.referenceChat.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+      });
+      this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
+      this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
+
+    } else { //user offline
       console.log('offline');
       this.setState({
         isConnected: false
-      })
+      });
+    this.getMessages();
     }
   });
-
-  this.getMessages();
-  this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-    if (!user) {
-      await firebase.auth().signInAnonymously();
-    }
-  this.setState({
-    uid: user.uid,
-    messages: [],
-    user: {
-      _id: user.uid,
-      name: this.state.username,
-      avatar: 'https://placeimg.com/140/140/any'
-    },
-    loggedInText: 'Hello there',
-  });
-  this.unsubscribe = this.referenceChat.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
-  });
-  this.referenceUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
-  this.unsubscribeUser = this.referenceUser.onSnapshot(this.onCollectionUpdate);
 }
 
   componentWillUnmount() {
