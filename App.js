@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ScrollView } from 'react-native';
 import Home from './Components/Home';
 import Chat from './Components/Chat';
-import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 

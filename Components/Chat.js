@@ -1,4 +1,5 @@
 import React from 'react';
+import CustomActions from './CustomActions';
 import { StyleSheet, View, Button, backgroundColor } from 'react-native';
 import { Bubble, GiftedChat, SystemMessage, InputToolbar } from 'react-native-gifted-chat';
 import { Platform, KeyboardAvoidingView } from 'react-native';
@@ -30,14 +31,7 @@ export default class Chat extends React.Component {
 
     this.state = {
       username: this.props.route.params.username,
-      messages: [
-        // {
-        //   _id: 2,
-        //     text: `${this.props.route.params.username} joined the chat`,
-        //     createdAt: new Date(),
-        //     system: true
-        // } //not sure where to put the "joined chat" info now - in 'ComponentDidMount' it refreshed after each message, here disappears
-      ],
+      messages: [],
       uid: 0,
       user: {
         _id: '',
@@ -208,6 +202,10 @@ componentDidMount() {
     }
   }
 
+  renderCustomActions = (props) => {
+    return <CustomActions {...props}/>
+  };
+
   render() {
     // let username = this.props.route.params.username;
     // let color = this.props.route.params.color;
@@ -220,10 +218,12 @@ componentDidMount() {
       {/* <Text>{this.state.loggedInText}</Text> */}
     <GiftedChat
     messages={this.state.messages}
+    color={this.props.route.params.color}
     onSend={messages => this.onSend(messages)}
     renderBubble={this.renderBubble.bind(this)}
     renderSystemMessage={this.renderSystemMessage.bind(this)}
     renderInputToolbar={this.renderInputToolbar.bind(this)}
+    renderActions={this.renderCustomActions.bind(this)}
     user={{
       _id: this.state.uid,
       name: this.state.username,

@@ -47,10 +47,6 @@ export default class Home extends React.Component {
             <View style={ styles.colorSelection }>
               <Text style={styles.colorText}>Choose Your Color:</Text>
               <View style={styles.colorButtons}>
-                {/* <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[0]}]} onPress={() => this.setState({ color: backgroundColor[0] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[1]}]} onPress={() => this.setState({ color: backgroundColor[1] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[2]}]} onPress={() => this.setState({ color: backgroundColor[2] })}></TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonColor, {backgroundColor: backgroundColor[3]}]} onPress={() => this.setState({ color: backgroundColor[3] })}></TouchableOpacity> */}
                 {backgroundColor.map(color =>
                 <TouchableOpacity key={color.id}
                 style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color })}>
@@ -58,12 +54,6 @@ export default class Home extends React.Component {
                 )}
               </View>
             </View>
-            {/* <Button title="Enter the chat"
-            style={styles.button}
-            // onPress={ this.onPress }
-            // onPress={ (username) => this.setState({ username: username }) }
-            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
-            ></Button> */}
             <TouchableOpacity
             style={[styles.button, {backgroundColor: this.state.color,}]}
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}>
