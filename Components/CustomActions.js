@@ -8,14 +8,38 @@ export default class CustomActions extends React.Component {
     super(props);
   }
 
-render() {
-  return(
-    <TouchableOpacity style={[styles.container]}>
-      <View style={[styles.customActionsButton, {borderColor: this.props.color}]}>
-      <Text style={[styles.text, {color: this.props.color}]}>+</Text>
-      </View>
-    </TouchableOpacity>
-  )};
+  onActionPress = () => {
+    const options = ['Choose photo from your gallery', 'Take picture', 'Send your location', 'Cancel'];
+    const cancelButtonIndex = options.length - 1;
+    this.context.actionSheet().showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      async (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            console.log('take a pic from gallery');
+            return;
+          case 1:
+            console.log('take a new pic');
+            return;
+          case 2:
+            console.log('send location');
+            default:
+        }
+      },
+    );
+  };
+
+  render() {
+    return(
+      <TouchableOpacity style={[styles.container]} onPress={this.onActionPress}>
+        <View style={[styles.customActionsButton, {borderColor: this.props.color}]}>
+        <Text style={[styles.text, {color: this.props.color}]}>+</Text>
+        </View>
+      </TouchableOpacity>
+    )};
 }
 
 const styles = StyleSheet.create({
