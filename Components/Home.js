@@ -47,7 +47,7 @@ export default class Home extends React.Component {
               <Text style={styles.colorText}>Choose Your Color:</Text>
               <View style={styles.colorButtons}>
                 {backgroundColor.map(color =>
-                <TouchableHighlight key={color.id}
+                <TouchableHighlight key={color}
                 style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color })}>
                 </TouchableHighlight>
                 )}
@@ -131,19 +131,7 @@ const styles = StyleSheet.create({
   buttonColor: {
     width: 48,
     height: 48,
-    borderRadius: 50,
-  },
-  buttonColor1: {
-    backgroundColor: backgroundColor[0]
-  },
-  buttonColor2: {
-    backgroundColor: backgroundColor[1]
-  },
-  buttonColor3: {
-    backgroundColor: backgroundColor[2]
-  },
-  buttonColor4: {
-    backgroundColor: backgroundColor[3]
+    borderRadius: 50
   },
   colorText: {
     fontSize: 16,
