@@ -15,7 +15,7 @@ export default class Home extends React.Component {
     };
   }
 
-  onPress() {
+  onPress = () => {
     if (this.state.username) {
       this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )
     } else {
@@ -23,7 +23,7 @@ export default class Home extends React.Component {
     }
   }
 
-  setUser(username) {
+  setUser = (username) => {
       this.setState({ username })
   }
 
