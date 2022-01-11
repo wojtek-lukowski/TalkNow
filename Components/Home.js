@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, TextInput, ImageBackground, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const image = require('../Images/bcg-img.png');
 
@@ -48,17 +48,17 @@ export default class Home extends React.Component {
               <Text style={styles.colorText}>Choose Your Color:</Text>
               <View style={styles.colorButtons}>
                 {backgroundColor.map(color =>
-                <TouchableOpacity key={color.id}
+                <TouchableHighlight key={color.id}
                 style={[styles.buttonColor, {backgroundColor: color}]} onPress={() => this.setState({ color })}>
-                </TouchableOpacity>
+                </TouchableHighlight>
                 )}
               </View>
             </View>
-            <TouchableOpacity
+            <TouchableHighlight
             style={[styles.button, {backgroundColor: this.state.color,}]}
             onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}>
               <Text style={styles.buttonText}>ENTER THE CHAT</Text>
-            </TouchableOpacity>
+            </TouchableHighlight>
         </View>
         </View>
       </ImageBackground>
