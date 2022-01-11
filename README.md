@@ -18,5 +18,3 @@ in the root folder of the project to install the dependencies. Installation of [
 
 ### Running the app
 To launch the app, run `npm start` or `expo start`, then follow to the Expo page in the browser and choose the way to open the project.
-
-![profile](./Images/chat.png)
