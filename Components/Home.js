@@ -15,17 +15,16 @@ export default class Home extends React.Component {
     };
   }
 
-  // onPress() {
-  //  (username) => this.setState({ username: username });
-  //   this.props.navigation.navigate('Chat');
-  // }
+  onPress() {
+    if (this.state.username) {
+      this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )
+    } else {
+      return Alert.alert('Please enter your name')
+    }
+  }
 
   setUser(username) {
-    if (!username) {
-      return Alert.alert('Please enter your name')
-    } else {
       this.setState({ username })
-    }
   }
 
   render() {
@@ -56,7 +55,9 @@ export default class Home extends React.Component {
             </View>
             <TouchableHighlight
             style={[styles.button, {backgroundColor: this.state.color,}]}
-            onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}>
+            onPress={() => this.onPress()}
+            // onPress={() => this.props.navigation.navigate('Chat', { username: this.state.username, color: this.state.color } )}
+            >
               <Text style={styles.buttonText}>ENTER THE CHAT</Text>
             </TouchableHighlight>
         </View>
