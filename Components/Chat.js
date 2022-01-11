@@ -2,6 +2,7 @@ import React from 'react';
 import CustomActions from './CustomActions';
 import { StyleSheet, View, Button, backgroundColor } from 'react-native';
 import { Bubble, GiftedChat, SystemMessage, InputToolbar } from 'react-native-gifted-chat';
+import MapView from 'react-native-maps';
 import { Platform, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -150,6 +151,8 @@ componentDidMount() {
           name: data.user.name,
           avatar: data.user.avatar
         },
+        image: data.image || null,
+        location: data.location || null
       });
     });
     this.setState({
@@ -157,26 +160,29 @@ componentDidMount() {
     })
   }
 
-  addMessage(newMessage) {
-    const message = newMessage[0];
+  addMessage = () => {
+    const message = this.state.messages[0];
     this.referenceChat.add({
       _id: message._id,
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      uid: this.state.uid
+      // uid: this.state.uid,
+      image: message.image || null,
+      location: message.location || null
     });
   }
 
-  onSend(messages = []) {
+  onSend = (messages = []) => {
     this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages)
-    }));
-    this.addMessage(messages);
-    this.saveMessages(messages);
+      messages: GiftedChat.append(previousState.messages, messages),
+    }), () => {
+      this.addMessage();
+      this.saveMessages();
+    })
   }
 
-  renderBubble(props) {
+  renderBubble = (props) => {
     return (
       <Bubble
       {...props}
@@ -189,11 +195,11 @@ componentDidMount() {
     )
   }
 
-  renderSystemMessage(props) {
+  renderSystemMessage = (props) => {
 		return <SystemMessage {...props} textStyle={{ color: this.props.route.params.color }} />;
 	}
 
-  renderInputToolbar(props) {
+  renderInputToolbar = (props) => {
     if (this.state.isConnected == false) {
     } else {
       return(
@@ -205,6 +211,20 @@ componentDidMount() {
   renderCustomActions = (props) => {
     return <CustomActions {...props}/>
   };
+
+  renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+        style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+        region={{ latitude: currentMessage.location.latitude, longitude: currentMessage.location.longitude,
+        latitudeDelta: 0.0922, longitudeDelta: 0.421 }}>
+        </MapView>
+      );
+    }
+    return null;
+  }
 
   render() {
     // let username = this.props.route.params.username;
@@ -220,10 +240,11 @@ componentDidMount() {
     messages={this.state.messages}
     color={this.props.route.params.color}
     onSend={messages => this.onSend(messages)}
-    renderBubble={this.renderBubble.bind(this)}
-    renderSystemMessage={this.renderSystemMessage.bind(this)}
-    renderInputToolbar={this.renderInputToolbar.bind(this)}
-    renderActions={this.renderCustomActions.bind(this)}
+    renderBubble={this.renderBubble}
+    renderSystemMessage={this.renderSystemMessage}
+    renderInputToolbar={this.renderInputToolbar}
+    renderActions={this.renderCustomActions}
+    renderCustomView={this.renderCustomView}
     user={{
       _id: this.state.uid,
       name: this.state.username,

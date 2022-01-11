@@ -1,6 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+
+const firebase = require('firebase');
+require('firebase/firestore');
 
 export default class CustomActions extends React.Component {
 
@@ -20,16 +26,104 @@ export default class CustomActions extends React.Component {
         switch (buttonIndex) {
           case 0:
             console.log('take a pic from gallery');
-            return;
+            return this.pickImage();
           case 1:
             console.log('take a new pic');
-            return;
+            return this.takePhoto();
           case 2:
             console.log('send location');
-            default:
+            return this.getLocation();
+          default:
         }
       },
     );
+  }
+
+  getLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    try {
+      if (status === 'granted') {
+        console.log('permission', status);
+        let result = await Location.getCurrentPositionAsync({})
+          .catch((error) => {
+            console.error(error);
+            console.log('error1');
+            });
+            const longitude = JSON.stringify(result.coords.longitude);
+            const altitude = JSON.stringify(result.coords.latitude);
+        if (result) {
+          this.props.onSend({
+            location: {
+              longitude: result.coords.longitude,
+              latitude: result.coords.latitude,
+            }
+          });
+        }
+        console.log('location', result);
+      }
+    } catch (error) {
+      console.error(error);
+      console.log('error2');
+    }
+  }
+
+  pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if(status === 'granted') {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      }).catch(error => console.log(error));
+
+      if(!result.cancelled) {
+        const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl });
+      }
+    }
+  }
+
+  takePhoto = async() => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    if(status === 'granted') {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+      }).catch(error => console.log(error));
+
+      if(!result.cancelled) {
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
+      }
+    }
+  }
+
+  uploadImage = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const imageNameBefore = uri.split("/");
+    const imageName = imageNameBefore[imageNameBefore.length - 1];
+
+    const ref = firebase.storage().ref().child(`images/${imageName}`);
+
+    const snapshot = await ref.put(blob);
+
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
   };
 
   render() {
@@ -41,6 +135,10 @@ export default class CustomActions extends React.Component {
       </TouchableOpacity>
     )};
 }
+
+CustomActions.contextTypes = {
+  actionSheet: PropTypes.func,
+  };
 
 const styles = StyleSheet.create({
     container: {
