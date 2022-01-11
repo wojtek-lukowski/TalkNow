@@ -40,7 +40,9 @@ export default class Chat extends React.Component {
         avatar: ''
       },
       isConnected: undefined,
-      loggedInText: 'Connecting'
+      // image: null,
+      // location: null,
+      // loggedInText: 'Connecting'
     }
   }
 
@@ -58,18 +60,10 @@ getMessages = async () => {
 };
 
 saveMessages = async () => {
+  console.log('running saveMessages');
   try {
     await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     console.log('saving to storage');
-    //adding to localStorage (to test in browser)
-    await localStorage.setItem('messages', JSON.stringify(this.state.messages));
-    console.log('saving to local storage');
-    //testing localStorage content
-    let localStorageMessages = localStorage.getItem('messages');
-    console.log('local storage', JSON.parse(localStorageMessages));
-    //testing AsyncStorage content
-    let asyncStorageMessages = AsyncStorage.getItem('messages');
-    console.log('async storage', asyncStorageMessages);
   } catch (error) {
     console.log(error.message);
   }
@@ -124,11 +118,6 @@ componentDidMount() {
         isConnected: false
       });
     this.getMessages();
-    //testing local & async storage content offline
-    let localStorageMessagesOffline = localStorage.getItem('messages');
-    console.log('local storage offline', localStorageMessagesOffline);
-    let asyncStorageMessagesOffline = AsyncStorage.getItem('messages');
-    console.log('async storage offline', asyncStorageMessagesOffline);
     }
   });
 }
@@ -161,6 +150,7 @@ componentDidMount() {
   }
 
   addMessage = () => {
+    console.log('running adMessage', this.state.messages);
     const message = this.state.messages[0];
     this.referenceChat.add({
       _id: message._id,
@@ -171,9 +161,11 @@ componentDidMount() {
       image: message.image || null,
       location: message.location || null
     });
+    console.log('message added', this.state.messages);
   }
 
   onSend = (messages = []) => {
+    console.log('running onSend');
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
