@@ -43,32 +43,20 @@ export default class CustomActions extends React.Component {
     const { status } = await Location.requestForegroundPermissionsAsync();
     try {
       if (status === 'granted') {
-        console.log('permission', status);
         let result = await Location.getCurrentPositionAsync({})
         .catch((error) => {
-          console.error(error);
-          console.log('error1');
         });
-        console.log('location', result);
-        // const longitude = JSON.stringify(result.coords.longitude);
-        // const altitude = JSON.stringify(result.coords.latitude);
         if (result) {
-          console.log('calling onSend', result);
-          console.log('props', this.props);
           this.props.onSend({
             location: {
               longitude: result.coords.longitude,
               latitude: result.coords.latitude,
-              // longitude: JSON.stringify(result.coords.longitude),
-              // latitude: JSON.stringify(result.coords.latitude),
             }
           });
         }
-        console.log('location2', result);
       }
     } catch (error) {
       console.error(error);
-      console.log('error2');
     }
   }
 
@@ -95,12 +83,10 @@ export default class CustomActions extends React.Component {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
       }).catch(error => console.log(error));
 
-      if(!result.cancelled) {
-        if (!result.cancelled) {
-          const imageUrl = await this.uploadImage(result.uri);
-          this.props.onSend({ image: imageUrl });
+      if (!result.cancelled) {
+        const imageUrl = await this.uploadImage(result.uri);
+        this.props.onSend({ image: imageUrl });
         }
-      }
     }
   }
 

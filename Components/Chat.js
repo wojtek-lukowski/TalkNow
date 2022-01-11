@@ -40,9 +40,6 @@ export default class Chat extends React.Component {
         avatar: ''
       },
       isConnected: undefined,
-      // image: null,
-      // location: null,
-      // loggedInText: 'Connecting'
     }
   }
 
@@ -53,17 +50,14 @@ getMessages = async () => {
     this.setState({
       messages: JSON.parse(messages)
     });
-    console.log('getting from storage');
   } catch (error) {
     console.log(error.message);
   }
 };
 
 saveMessages = async () => {
-  console.log('running saveMessages');
   try {
     await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
-    console.log('saving to storage');
   } catch (error) {
     console.log(error.message);
   }
@@ -75,7 +69,6 @@ deleteMessages = async () => {
     this.setState({
       messages: []
     });
-    console.log('deleting messages');
   } catch (error) {
     console.log(error.message)
   }
@@ -86,7 +79,6 @@ componentDidMount() {
   NetInfo.fetch().then(connection => {
     //user online
     if (connection.isConnected) {
-      console.log('online');
       this.setState({
         isConnected: true
       });
@@ -113,7 +105,6 @@ componentDidMount() {
 
     } else {
       //user offline
-      console.log('offline');
       this.setState({
         isConnected: false
       });
@@ -133,7 +124,7 @@ componentDidMount() {
       var data = message.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || null,
         createdAt: data.createdAt.toDate(),
         user: {
           _id: data.user._id,
@@ -150,22 +141,19 @@ componentDidMount() {
   }
 
   addMessage = () => {
-    console.log('running adMessage', this.state.messages);
     const message = this.state.messages[0];
     this.referenceChat.add({
       _id: message._id,
-      text: message.text,
+      text: message.text || null,
       createdAt: message.createdAt,
       user: message.user,
       // uid: this.state.uid,
       image: message.image || null,
       location: message.location || null
     });
-    console.log('message added', this.state.messages);
   }
 
   onSend = (messages = []) => {
-    console.log('running onSend');
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
