@@ -119,7 +119,13 @@ export default class CustomActions extends React.Component {
 
   render() {
     return(
-      <TouchableOpacity style={[styles.container]} onPress={this.onActionPress}>
+      <TouchableOpacity
+        accessible={true}
+        accessibilityLabel="More options"
+        accessibilityHint="You can send a photo or your location."
+        accessibilityRole="button"
+        style={[styles.container]}
+        onPress={this.onActionPress}>
         <View style={[styles.customActionsButton, {borderColor: this.props.color}]}>
         <Text style={[styles.text, {color: this.props.color}]}>+</Text>
         </View>
